@@ -7,6 +7,10 @@ const plus = document.querySelector("#plus");
 const heart = document.querySelector("#heart");
 const pause = document.querySelector("#pause");
 const likes = document.querySelector(".likes");
+const form = document.querySelector("#comment-form");
+const inputField = document.querySelector("#comment-input");
+const commentDiv = document.querySelector("#list");
+const submit = document.querySelector("#submit");
 
 let seconds = -1; // will start at 0
 // setInterval invokes function multiple times until window is closed
@@ -61,7 +65,18 @@ function liked(num) {
   clicks += 1;
   let countNumber = parseInt(counter.innerText);
   const li = document.createElement("li");
-  //fix later, this is wronf
+  //fix later, this is wrong
   li.innerText += `${countNumber} has been liked ${clicks} times.`;
   likes.appendChild(li);
+}
+
+form.addEventListener("submit", addComment);
+
+function addComment(e) {
+  e.preventDefault();
+  const newComment = document.createElement("li");
+  newComment.textContent = inputField.value;
+  console.log(newComment);
+  commentDiv.appendChild(newComment);
+  form.reset();
 }
