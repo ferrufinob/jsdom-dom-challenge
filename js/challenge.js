@@ -48,6 +48,15 @@ minus.addEventListener("click", () => {
   }
 });
 
+let hash = {}; // {number: likes}
+heart.addEventListener("click", function () {
+  let number = counter.innerHTML;
+  console.log(hash);
+  if (hash[number]) hash[number]++;
+  else hash[number] = 1;
+  commentDiv.innerHTML += `<li>${counter.innerHTML} has ${hash[number]} like(s)!</li>`;
+});
+
 // event delegation
 function addComment(comment) {
   commentDiv.innerHTML += `<li>${comment}</li>`;
