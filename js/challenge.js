@@ -24,16 +24,16 @@ pause.addEventListener("click", () => {
   toggleButtons();
 });
 
-function resumed() {
-  counter.classList.add("paused");
-  pause.innerText = "pause";
-  clearInterval(timer);
-}
-
 function paused() {
   counter.classList.remove("paused");
-  pause.innerText = "resume";
+  pause.innerText = "pause";
   timer = setInterval(count, 1000);
+}
+
+function resumed() {
+  counter.classList.add("paused");
+  pause.innerText = "resume";
+  clearInterval(timer);
 }
 
 function toggleButtons() {
