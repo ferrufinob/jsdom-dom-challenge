@@ -10,43 +10,41 @@ const form = document.querySelector("#comment-form");
 const inputField = document.querySelector("#comment-input");
 const commentDiv = document.querySelector("#list");
 
-let seconds = -1;
-let timer = setInterval(startTimer, 1000); // 1000 will run it every 1 second
+//!! avoid type coercion issues down the road by using parseInt() always!!
+const count = () => (counter.innerText = parseInt(counter.innerText) + 1);
 
-function startTimer() {
-  seconds++;
-  counter.innerText = seconds;
-}
-
-function pauseResumeTimer() {
-  // cancels setInterval()
-  if (pause.innerText == "pause") {
-    clearInterval(timer);
-    // change text and disable buttons
-    minus.disabled = true;
-    plus.disabled = true;
-    heart.disabled = true;
-    pause.innerText = "resume";
+plus.addEventListener("click", count);
+minus.addEventListener("click", () => counter.innerText--);
+pause.addEventListener("click", () => {
+  if (counter.classList.contains("paused")) {
+    paused();
   } else {
-    // revert back: refactor this later
-    // resume timer
-    timer = setInterval(startTimer, 1000);
-    pause.innerText = "pause";
-    minus.disabled = false;
-    plus.disabled = false;
-    heart.disabled = false;
+    resumed();
   }
+  toggleButtons();
+});
+
+function resumed() {
+  counter.classList.add("paused");
+  pause.innerText = "pause";
+  clearInterval(timer);
 }
 
-pause.addEventListener("click", pauseResumeTimer);
-plus.addEventListener("click", () => {
-  seconds++;
-});
-minus.addEventListener("click", () => {
-  if (seconds >= 0) {
-    seconds--;
-  }
-});
+function paused() {
+  counter.classList.remove("paused");
+  pause.innerText = "resume";
+  timer = setInterval(count, 1000);
+}
+
+function toggleButtons() {
+  document.querySelectorAll("button").forEach((button) => {
+    if (button.id !== "pause") {
+      button.disabled = !button.disabled;
+    }
+  });
+}
+
+let timer = setInterval(count, 1000);
 
 let hash = {}; // {number: likes}
 heart.addEventListener("click", function () {
@@ -54,12 +52,14 @@ heart.addEventListener("click", function () {
   console.log(hash);
   if (hash[number]) hash[number]++;
   else hash[number] = 1;
-  commentDiv.innerHTML += `<li>${counter.innerHTML} has ${hash[number]} like(s)!</li>`;
+  commentDiv.insertAdjacentHTML(
+    "beforeend",
+    `<li>${counter.innerHTML} has ${hash[number]} like(s)!</li>`
+  );
 });
 
-// event delegation
 function addComment(comment) {
-  commentDiv.innerHTML += `<li>${comment}</li>`;
+  commentDiv.insertAdjacentHTML("beforeend", `<li>${comment}</li>`);
 }
 
 form.addEventListener("submit", (e) => {
